@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    
+    <%- include('../views/headers.ejs') %>
+    
+
+    
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                
+            <div class="card">
+                <div class="card-header">
+                    <h2>Search Results</h2>
+                </div>
+                <div class="card-body">
+                    <form method="GET" action="/search">
+                        <div class="mb-3">
+                            <input class="form-control" type="text" name="searchQuery" placeholder="Search transactions" />
+                        </div>
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid">
+        <div class="table-responsive-md">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Shipping Date</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Branch</th>
+                        <th>Order Woo Status</th>
+                        <th>Auth Amount</th>
+                        <th>Final Amount</th>
+                        <th>Amt to Refund</th>
+                        <th>Cash to Collect</th>
+                        <th>Payment Link</th>
+                        <th>Amt to Capture</th>
+                        <th>TotCapture Amount</th>
+                        <th>Total Refunded</th>
+                        <th>MID</th>
+                        <th>Woo Payment Method</th>
+                        <th>GHL Payment</th>
+                        <th>Status</th>
+                        <th>State</th>
+                        <th>Remarks</th>
+                        <th>GHL Acquirer</th>
+                        <th>Issuing Bank</th>
+                        <th>DMS Amount</th>
+                        <th>Variance</th>
+                        <th>DMS Date</th>
+                        <th>Difference in Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% transactions.forEach(transaction => { 
+                        let CashToCollect = transaction.amount - transaction.order_total; // Calculate difference
+                    %>
+                        <tr>
+                            <td><%= transaction.order_number %></td>
+                            <td><%= new Date(transaction.date_created).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) %></td>
+                            <td><%= transaction.billing_first_name %></td>
+                            <td><%= transaction.billing_last_name %></td>
+                            <td><%= transaction.location %></td>
+                            <td><%= transaction.order_status %></td>
+                            <td><%= transaction.amount %></td>
+                            <td><%= transaction.order_total %></td>
+                            <td>
+                                <% if (transaction.order_payment_method === "Debit Card / Online Banking (via eGHL)") { %>
+                                    <span style="color: red;"><%= (transaction.amount - transaction.order_total).toFixed(2) %></span>
+                                <% } else { %>
+                                    <span style="color: green;">0.00</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (transaction.order_payment_method === "Cash on Delivery") { %>
+                                    <% if (CashToCollect > 0) { %>
+                                        <span style="color: red;"><%= CashToCollect.toFixed(2) %></span>
+                                    <% } else { %>
+                                        <span style="color: gray;">0.00</span>
+                                    <% } %>
+                                <% } else { %>
+                                    <span style="color: green;">0.00</span>
+                                <% } %>
+                            </td>
+                            <td><%= transaction.tot_refund_amt %></td>
+                            <td><%= transaction.tot_capture_amt %></td>
+                            <td><%= transaction.tot_refund_amt %></td>
+                            <td><%= transaction.tot_refund_amt %></td>
+                            <td> </td>
+                            <td><%= transaction.order_payment_method %></td>
+                            <td> </td>
+                            <td><%= transaction.status %></td>
+                            <td><%= transaction.state %></td>
+                            <td></td>
+                            <td><%= transaction.acquirer %></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    
+</body>
+</html>

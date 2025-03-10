@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <%- include('../views/headers.ejs') %>
+    
+    <h1>Upload CSV File</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Woo Orders</h2>
+                        <form action="/api/csv/upload/woo" method="POST" enctype="multipart/form-data">
+                            <input class="form-control" type="file" name="wooFile" required>
+                            <button class="btn btn-success" type="submit">Upload Woo </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>EGHL Transactions</h2>
+                        <form action="/api/csv/upload/eghl" method="POST" enctype="multipart/form-data">
+                            <input class="form-control" type="file" name="eghlFile" required>
+                            <button class="btn btn-success" type="submit">Upload Eghl </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

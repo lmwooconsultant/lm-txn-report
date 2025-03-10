@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
+
+    <!-- Optional: Add js-cookie if needed -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
+     <!-- Bootstrap -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body  class="d-flex justify-content-center align-items-center vh-100 bg-light">
+
+    <div class="card p-4 shadow-lg" style="width: 350px;">
+        <h2 class="text-center mb-4">Login</h2>
+        <form id="login" onsubmit="loginUser(event)">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+    </div>
+    
+
+
+
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            var firebaseConfig = {
+                apiKey: "AIzaSyBID5tYti4uRw_nYrTLMnGFh7sn3PZ7p5c",
+                authDomain: "lm-middleware.firebaseapp.com",
+                projectId: "lm-middleware",
+                storageBucket: "lm-middleware.appspot.com",
+                messagingSenderId: "399396921877",
+                appId: "1:399396921877:web:a601655bb427c18148641c",
+                measurementId: "G-S4P12PQGNT"
+            };
+
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            // Set Firebase authentication persistence
+            const auth = firebase.auth();
+
+
+        });
+
+        async function loginUser(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const idToken = await userCredential.user.getIdToken();
+
+                const response = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                    },
+                    body: JSON.stringify({ idToken })
+                });
+
+                const data = await response.json();
+
+                if (data.user) {
+                    document.cookie = `sessionToken=${data.sessionToken}; path=/`;
+                window.location.href = "/";
+                } else {
+                    alert('Login failed');
+                }
+            } catch (error) {
+                console.error("Login failed:", error);
+                alert(error.message);
+            }
+        }
+    </script>
+
+
+
+
+
+</body>
+
+</html>
