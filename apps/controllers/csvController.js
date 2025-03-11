@@ -4,11 +4,15 @@ const parseCSV = require('../utils/csvParser');
 
 // Upload CSV for Woo Orders
 const uploadWooCSV = async (req, res) => {
-  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+  //if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
   const filePath = path.join(__dirname, '../../uploads', req.file.filename);
 
   try {
+
+    if (!req.file) {
+      return res.redirect("/upload?message=No file uploaded&type=error");
+    }
     const records = await parseCSV(filePath);
 
     for (const record of records) {
@@ -48,20 +52,27 @@ const uploadWooCSV = async (req, res) => {
       );
     }
 
-    res.status(201).json({ message: 'Woo CSV uploaded successfully' });
+    //res.status(201).json({ message: 'Woo CSV uploaded successfully' });
+    return res.redirect("/upload?message=Woo CSV File uploaded successfully&type=success");
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error processing Woo CSV', error: err });
+    //res.status(500).json({ message: 'Error processing Woo CSV', error: err });
+    return res.redirect("/upload?message=Error uploading file&type=error");
   }
 };
 
 // Upload CSV for EGHL Transactions
 const uploadEghlCSV = async (req, res) => {
-  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+  //if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
   const filePath = path.join(__dirname, '../../uploads', req.file.filename);
 
   try {
+
+    if (!req.file) {
+      return res.redirect("/upload?message=No file uploaded&type=error");
+    }
+
     const records = await parseCSV(filePath);
 
 
@@ -115,10 +126,12 @@ const uploadEghlCSV = async (req, res) => {
       );
     }
 
-    res.status(201).json({ message: 'EGHL CSV uploaded successfully' });
+    //res.status(201).json({ message: 'EGHL CSV uploaded successfully' });
+    return res.redirect("/upload?message=EGHL CSV File uploaded successfully&type=success");
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error processing EGHL CSV', error: err });
+    //res.status(500).json({ message: 'Error processing EGHL CSV', error: err });
+    return res.redirect("/upload?message=Error uploading file&type=error");
   }
 };
 

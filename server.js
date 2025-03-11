@@ -77,8 +77,12 @@ app.get('/search', isAuthenticated, async  (req, res) => {
   }
 });
 
-app.get('/upload', (req, res) => {
-  res.render('upload', { title: 'Upload CSV' });
+app.get('/upload', isAuthenticated, (req, res) => {
+  res.render('upload', { 
+    title: "Upload CSV File",
+    message: req.query.message || "",
+    type: req.query.type || "",
+  });
 });
 
 app.use(express.json());
