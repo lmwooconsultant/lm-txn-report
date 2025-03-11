@@ -46,7 +46,7 @@ app.get('/', isAuthenticated, async (req, res) => {
 
 
   try {
-    const response = await axios.get(`http://localhost:3000/api/txn?page=${page}&limit=10`); // Adjust URL if needed
+    const response = await axios.get(`http://localhost:5000/api/txn?page=${page}&limit=10`); // Adjust URL if needed
     const transactions = response.data.transactions; // Assuming API returns JSON array
     const currentPage = response.data.currentPage; // Assuming API returns JSON array
     const totalPages = response.data.totalPages; // Assuming API returns JSON array
@@ -64,7 +64,7 @@ app.get('/search', isAuthenticated, async  (req, res) => {
   let searchQuery = parseInt(req.query.searchQuery)|| ''; // Default to page 1
   try {
     // Only include searchQuery if it's not blank
-    let url = 'http://localhost:3000/api/search';
+    let url = 'http://localhost:5000/api/search';
     if (searchQuery) {
       url += `?searchQuery=${searchQuery}`;
     }
