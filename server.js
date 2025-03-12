@@ -46,7 +46,7 @@ app.get('/', isAuthenticated, async (req, res) => {
 
 
   try {
-    const response = await axios.get(`http://localhost:${PORT}api/txn?page=${page}&limit=10`); // Adjust URL if needed
+    const response = await axios.get(`http://localhost:${PORT}/api/txn?page=${page}&limit=10`); // Adjust URL if needed
     const transactions = response.data.transactions; // Assuming API returns JSON array
     const currentPage = response.data.currentPage; // Assuming API returns JSON array
     const totalPages = response.data.totalPages; // Assuming API returns JSON array
@@ -88,7 +88,7 @@ app.get('/search', isAuthenticated, async  (req, res) => {
     if (status && status.trim() !== '') queryParams.append("status", status);
     if (state && state.trim() !== '') queryParams.append("state", state);
 
-    let url = `http://localhost:${PORT}api/search?${queryParams.toString()}`;
+    let url = `http://localhost:${PORT}/api/search?${queryParams.toString()}`;
     const response = await axios.get(url); // Adjust URL if needed
     const transactions = response.data.transactions || []; // Assuming API returns a JSON array
 
