@@ -67,7 +67,7 @@ const getTransactions = async (req, res) => {
 
 const getSearchTransactions = async (req, res) => {
   try {
-    let { searchQuery, order_status, order_payment_method, location, status, state } = req.query;  // Get search query and pagination parameters
+    let { searchQuery, order_status, order_payment_method, location, status, state, start_date, end_date  } = req.query;  // Get search query and pagination parameters
 
     let query = `
       SELECT 
@@ -124,6 +124,12 @@ const getSearchTransactions = async (req, res) => {
         conditions.push("e.state = ?");
         queryParams.push(state);
       }
+
+      // Add Date Range Filter
+    if (start_date && end_date && start_date.trim() !== '' && end_date.trim() !== '') {
+      conditions.push("w.order_date BETWEEN ? AND ?");
+      queryParams.push(start_date, end_date);
+    }
   
       // Append conditions only if there are any
       if (conditions.length > 0) {

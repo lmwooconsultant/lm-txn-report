@@ -46,7 +46,7 @@ app.get('/', isAuthenticated, async (req, res) => {
 
 
   try {
-    const response = await axios.get(`http://localhost:${PORT}/api/txn?page=${page}&limit=10`); // Adjust URL if needed
+    const response = await axios.get(`http://18.138.19.85:${PORT}/api/txn?page=${page}&limit=10`); // Adjust URL if needed
     const transactions = response.data.transactions; // Assuming API returns JSON array
     const currentPage = response.data.currentPage; // Assuming API returns JSON array
     const totalPages = response.data.totalPages; // Assuming API returns JSON array
@@ -63,7 +63,7 @@ app.get('/', isAuthenticated, async (req, res) => {
 app.get('/search', isAuthenticated, async  (req, res) => {
   //let searchQuery = parseInt(req.query.searchQuery)|| ''; // Default to page 1
   try {
-    let { searchQuery, order_status, order_payment_method, location, status, state } = req.query;
+    let { searchQuery, order_status, order_payment_method, location, status, state, start_date, end_date } = req.query;
 
     // Check if all filters are empty or undefined
     const isEmptySearch =
@@ -72,7 +72,9 @@ app.get('/search', isAuthenticated, async  (req, res) => {
       (!order_payment_method || order_payment_method.trim() === "undefined" || order_payment_method.trim() === "") &&
       (!location || location.trim() === "undefined" || location.trim() === "") &&
       (!status || status.trim() === "undefined" || status.trim() === "") &&
-      (!state || state.trim() === "undefined" || state.trim() === "");
+      (!state || state.trim() === "undefined" || state.trim() === "") &&
+      (!start_date || start_date.trim() === "undefined" || start_date.trim() === "") &&
+      (!end_date || end_date.trim() === "undefined" || end_date.trim() === "");
 
     if (isEmptySearch) {
       return res.render("searchResults", { title: 'Search Result Page', transactions: [] }); 
@@ -87,8 +89,10 @@ app.get('/search', isAuthenticated, async  (req, res) => {
     if (location && location.trim() !== '') queryParams.append("location", location);
     if (status && status.trim() !== '') queryParams.append("status", status);
     if (state && state.trim() !== '') queryParams.append("state", state);
+    if (start_date && start_date.trim() !== '') queryParams.append("start_date", start_date);
+    if (end_date && end_date.trim() !== '') queryParams.append("end_date", end_date);
 
-    let url = `http://localhost:${PORT}/api/search?${queryParams.toString()}`;
+    let url = `http://18.138.19.85:${PORT}/api/search?${queryParams.toString()}`;
     const response = await axios.get(url); // Adjust URL if needed
     const transactions = response.data.transactions || []; // Assuming API returns a JSON array
 

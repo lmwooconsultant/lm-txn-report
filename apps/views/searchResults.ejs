@@ -17,8 +17,8 @@
 
     <div class="container mb-5">
         <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
                 
             <div class="card">
                 <div class="card-header">
@@ -30,36 +30,69 @@
                             <input class="form-control" type="text" name="searchQuery" placeholder="Search transactions" />
                         </div>
 
+                        <hr>
 
-                        <div class="mb-3">
-                            <select class="form-select" name="order_status" id="order_status">
-                                <option value="">Order Status</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <select class="form-select" name="order_status" id="order_status">
+                                        <option value="">Order Status</option>
+                                    </select>
+                                </div>
+                    
+                                <div class="mb-3">
+                                    <select class="form-select" name="order_payment_method" id="order_payment_method">
+                                        <option value="">Payment Method</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <select class="form-select" name="location" id="location">
+                                        <option value="">Branch</option>
+                                    </select>
+                                </div>
+                    
+                                <div class="mb-3">
+                                    <select class="form-select" name="status" id="status">
+                                        <option value="">EGHL Status</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <select class="form-select" name="state" id="state">
+                                        <option value="">EGHL State</option>
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
+
+                        <hr>
+                        <!-- Date Range Filters -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="start_date">Start Date:</label>
+                                    <input class="form-control"  type="date" id="start_date" name="start_date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">            
+                                    <label for="end_date">End Date:</label>
+                                    <input class="form-control"  type="date" id="end_date" name="end_date">
+                                </div>
+                            </div>
+                        </div>
+                        
             
-                        <div class="mb-3">
-                            <select class="form-select" name="order_payment_method" id="order_payment_method">
-                                <option value="">Payment Method</option>
-                            </select>
-                        </div>
+                        
             
-                        <div class="mb-3">
-                            <select class="form-select" name="location" id="location">
-                                <option value="">Branch</option>
-                            </select>
-                        </div>
-            
-                        <div class="mb-3">
-                            <select class="form-select" name="status" id="status">
-                                <option value="">EGHL Status</option>
-                            </select>
-                        </div>
-            
-                        <div class="mb-3">
-                            <select class="form-select" name="state" id="state">
-                                <option value="">EGHL State</option>
-                            </select>
-                        </div>
+                        
+
+                        
+                        
 
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
