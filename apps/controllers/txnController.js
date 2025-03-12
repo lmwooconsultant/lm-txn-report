@@ -67,9 +67,9 @@ const getTransactions = async (req, res) => {
 
 const getSearchTransactions = async (req, res) => {
   try {
-    const { searchQuery } = req.query;  // Get search query and pagination parameters
-    
-    const query = `
+    let { searchQuery, order_status, order_payment_method, location, status, state } = req.query;  // Get search query and pagination parameters
+
+    let query = `
       SELECT 
         w.order_id, w.order_number, w.order_status, w.order_date, 
         w.order_total, w.order_shipping_total, w.order_payment_method, 
@@ -89,12 +89,50 @@ const getSearchTransactions = async (req, res) => {
         SELECT MAX(e2.date_created) 
         FROM eghl_transactions e2 
         WHERE e2.order_id = e.order_id
-      )
-      AND (w.order_number LIKE ? OR w.billing_first_name LIKE ? OR w.billing_last_name LIKE ?);
-    `;
+      )`;
+
+      let queryParams = [];
+      let conditions = [];
+
+      // Only add conditions if the values are not empty
+      if (searchQuery && searchQuery.trim() !== '') {
+        conditions.push("(w.order_number LIKE ? OR w.billing_first_name LIKE ? OR w.billing_last_name LIKE ?)");
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`);
+      }
+  
+      if (order_status && order_status.trim() !== '') {
+        conditions.push("w.order_status = ?");
+        queryParams.push(order_status);
+      }
+  
+      if (order_payment_method && order_payment_method.trim() !== '') {
+        conditions.push("w.order_payment_method = ?");
+        queryParams.push(order_payment_method);
+      }
+  
+      if (location && location.trim() !== '') {
+        conditions.push("w.location = ?");
+        queryParams.push(location);
+      }
+  
+      if (status && status.trim() !== '') {
+        conditions.push("e.status = ?");
+        queryParams.push(status);
+      }
+  
+      if (state && state.trim() !== '') {
+        conditions.push("e.state = ?");
+        queryParams.push(state);
+      }
+  
+      // Append conditions only if there are any
+      if (conditions.length > 0) {
+        query += " AND " + conditions.join(" AND ");
+      }
+
 
     // Execute the query with search parameters
-    const [rows] = await db.query(query, [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`]);
+    const [rows] = await db.query(query, queryParams);
 
     res.status(200).json({
       transactions: rows,

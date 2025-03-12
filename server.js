@@ -46,7 +46,7 @@ app.get('/', isAuthenticated, async (req, res) => {
 
 
   try {
-    const response = await axios.get(`http://localhost:5000/api/txn?page=${page}&limit=10`); // Adjust URL if needed
+    const response = await axios.get(`http://localhost:${PORT}api/txn?page=${page}&limit=10`); // Adjust URL if needed
     const transactions = response.data.transactions; // Assuming API returns JSON array
     const currentPage = response.data.currentPage; // Assuming API returns JSON array
     const totalPages = response.data.totalPages; // Assuming API returns JSON array
@@ -61,13 +61,34 @@ app.get('/', isAuthenticated, async (req, res) => {
 });
 
 app.get('/search', isAuthenticated, async  (req, res) => {
-  let searchQuery = parseInt(req.query.searchQuery)|| ''; // Default to page 1
+  //let searchQuery = parseInt(req.query.searchQuery)|| ''; // Default to page 1
   try {
-    // Only include searchQuery if it's not blank
-    let url = 'http://localhost:5000/api/search';
-    if (searchQuery) {
-      url += `?searchQuery=${searchQuery}`;
+    let { searchQuery, order_status, order_payment_method, location, status, state } = req.query;
+
+    // Check if all filters are empty or undefined
+    const isEmptySearch =
+      (!searchQuery || searchQuery.trim() === "undefined" || searchQuery.trim() === "") &&
+      (!order_status || order_status.trim() === "undefined" || order_status.trim() === "") &&
+      (!order_payment_method || order_payment_method.trim() === "undefined" || order_payment_method.trim() === "") &&
+      (!location || location.trim() === "undefined" || location.trim() === "") &&
+      (!status || status.trim() === "undefined" || status.trim() === "") &&
+      (!state || state.trim() === "undefined" || state.trim() === "");
+
+    if (isEmptySearch) {
+      return res.render("searchResults", { title: 'Search Result Page', transactions: [] }); 
     }
+
+    // Construct query parameters dynamically
+    let queryParams = new URLSearchParams();
+
+    if (searchQuery && searchQuery.trim() !== '') queryParams.append("searchQuery", searchQuery);
+    if (order_status && order_status.trim() !== '') queryParams.append("order_status", order_status);
+    if (order_payment_method && order_payment_method.trim() !== '') queryParams.append("order_payment_method", order_payment_method);
+    if (location && location.trim() !== '') queryParams.append("location", location);
+    if (status && status.trim() !== '') queryParams.append("status", status);
+    if (state && state.trim() !== '') queryParams.append("state", state);
+
+    let url = `http://localhost:${PORT}api/search?${queryParams.toString()}`;
     const response = await axios.get(url); // Adjust URL if needed
     const transactions = response.data.transactions || []; // Assuming API returns a JSON array
 

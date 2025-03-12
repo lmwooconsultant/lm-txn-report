@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     
@@ -26,6 +29,38 @@
                         <div class="mb-3">
                             <input class="form-control" type="text" name="searchQuery" placeholder="Search transactions" />
                         </div>
+
+
+                        <div class="mb-3">
+                            <select class="form-select" name="order_status" id="order_status">
+                                <option value="">Order Status</option>
+                            </select>
+                        </div>
+            
+                        <div class="mb-3">
+                            <select class="form-select" name="order_payment_method" id="order_payment_method">
+                                <option value="">Payment Method</option>
+                            </select>
+                        </div>
+            
+                        <div class="mb-3">
+                            <select class="form-select" name="location" id="location">
+                                <option value="">Branch</option>
+                            </select>
+                        </div>
+            
+                        <div class="mb-3">
+                            <select class="form-select" name="status" id="status">
+                                <option value="">EGHL Status</option>
+                            </select>
+                        </div>
+            
+                        <div class="mb-3">
+                            <select class="form-select" name="state" id="state">
+                                <option value="">EGHL State</option>
+                            </select>
+                        </div>
+
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
                 </div>
@@ -120,6 +155,35 @@
             </table>
         </div>
     </div>
+
+
+    <script>
+        // Fetch dropdown options dynamically
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const response = await axios.get("/api/filters");
+                const filters = response.data;
+
+                const populateDropdown = (id, options) => {
+                    const select = document.getElementById(id);
+                    options.forEach(option => {
+                        const opt = document.createElement("option");
+                        opt.value = option;
+                        opt.textContent = option;
+                        select.appendChild(opt);
+                    });
+                };
+
+                populateDropdown("order_status", filters.orderStatus);
+                populateDropdown("order_payment_method", filters.paymentMethods);
+                populateDropdown("location", filters.locations);
+                populateDropdown("status", filters.eghlStatus);
+                populateDropdown("state", filters.eghlState);
+            } catch (error) {
+                console.error("Error fetching filters:", error);
+            }
+        });
+    </script>
 
 
     
